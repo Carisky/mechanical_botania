@@ -32,12 +32,7 @@ public class RotationalManaPoolBlockEntity extends SimpleKineticBlockEntity impl
         }
     }
 
-    @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.putInt("Mana", mana);
-        color.ifPresent(c -> tag.putInt("Color", c.getId()));
-    }
+
 
     @Override
     protected void read(CompoundTag tag, boolean clientPacket) {
