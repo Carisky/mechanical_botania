@@ -40,14 +40,21 @@ public class RotationalManaPoolBlockEntity extends SimpleKineticBlockEntity impl
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void read(CompoundTag tag, boolean clientPacket) {
+        super.read(tag, clientPacket);
         mana = tag.getInt("Mana");
         if (tag.contains("Color")) {
             color = Optional.of(DyeColor.byId(tag.getInt("Color")));
         } else {
             color = Optional.empty();
         }
+    }
+
+    @Override
+    protected void write(CompoundTag tag, boolean clientPacket) {
+        super.write(tag, clientPacket);
+        tag.putInt("Mana", mana);
+        color.ifPresent(c -> tag.putInt("Color", c.getId()));
     }
 
     // ManaPool implementation

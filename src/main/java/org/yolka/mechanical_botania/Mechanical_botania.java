@@ -54,7 +54,9 @@ public class Mechanical_botania {
 
     // Block that converts Create rotation into mana
     public static final RegistryObject<Block> ROTATIONAL_MANA_POOL = BLOCKS.register("rotational_mana_pool",
-            () -> new RotationalManaPoolBlock(BlockBehaviour.Properties.of().strength(2.0F)));
+            () -> {
+                return new RotationalManaPoolBlock(BlockBehaviour.Properties.of().strength(2.0F));
+            });
     public static final RegistryObject<Item> ROTATIONAL_MANA_POOL_ITEM = ITEMS.register("rotational_mana_pool",
             () -> new BlockItem(ROTATIONAL_MANA_POOL.get(), new Item.Properties()));
 
