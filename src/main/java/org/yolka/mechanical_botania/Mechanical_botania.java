@@ -27,6 +27,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.yolka.mechanical_botania.block.RotationalManaPoolBlock;
+import org.yolka.mechanical_botania.blockentity.RotationalManaPoolBlockEntity;
+import org.yolka.mechanical_botania.registry.ModBlockEntities;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -49,6 +52,12 @@ public class Mechanical_botania {
     // Creates a new BlockItem with the id "mechanical_botania:example_block", combining the namespace and path
     public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
 
+    // Block that converts Create rotation into mana
+    public static final RegistryObject<Block> ROTATIONAL_MANA_POOL = BLOCKS.register("rotational_mana_pool",
+            () -> new RotationalManaPoolBlock(BlockBehaviour.Properties.of().strength(2.0F)));
+    public static final RegistryObject<Item> ROTATIONAL_MANA_POOL_ITEM = ITEMS.register("rotational_mana_pool",
+            () -> new BlockItem(ROTATIONAL_MANA_POOL.get(), new Item.Properties()));
+
     // Creates a new food item with the id "mechanical_botania:example_id", nutrition 1 and saturation 2
     public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().alwaysEat().nutrition(1).saturationMod(2f).build())));
 
@@ -63,12 +72,11 @@ public class Mechanical_botania {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
-        // Register the Deferred Register to the mod event bus so blocks get registered
+        // Register deferred registers
         BLOCKS.register(modEventBus);
-        // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus);
-        // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
+        ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -94,7 +102,10 @@ public class Mechanical_botania {
 
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) event.accept(EXAMPLE_BLOCK_ITEM);
+        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            event.accept(EXAMPLE_BLOCK_ITEM);
+            event.accept(ROTATIONAL_MANA_POOL_ITEM);
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
